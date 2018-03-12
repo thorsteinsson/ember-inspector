@@ -85,6 +85,9 @@ export default EmberObject.extend(PortMixin, {
         this.inspectElement(element);
       }
     },
+    contextMenu() {
+      console.log('Clicked element in context menu', this.lastClickedElement);
+    },
     setOptions({ options }) {
       this.set('options', options);
       if (this.glimmerTree) {
@@ -122,6 +125,14 @@ export default EmberObject.extend(PortMixin, {
     previewDiv.style.display = 'none';
     previewDiv.setAttribute('data-label', 'preview-div');
     document.body.appendChild(previewDiv);
+
+    // Store last clicked element for context menu
+    this.lastClickedHandler = (event) => {
+      if (event.button === 2) {
+        this.lastClickedElement = event.target;
+      }
+    };
+    window.addEventListener('mousedown', this.lastClickedHandler);
 
     this.resizeHandler = () => {
       if (this.glimmerTree) {
@@ -179,6 +190,7 @@ export default EmberObject.extend(PortMixin, {
   willDestroy() {
     this._super();
     window.removeEventListener('resize', this.resizeHandler);
+    window.removeEventListener('mousedown', this.lastClickedHandler);
     document.body.removeChild(layerDiv);
     document.body.removeChild(previewDiv);
     this.get('_lastNodes').clear();
