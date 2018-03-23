@@ -303,22 +303,6 @@ module('View Tree Tab', function(hooks) {
     assert.deepEqual(messageSent.message, { inspect: false });
   });
 
-  test("Configuring which views to show", async function(assert) {
-    let messageSent = null;
-    port.reopen({
-      send(name, message) {
-        messageSent = { name, message };
-      }
-    });
-
-    await visit('/');
-    await click('.js-filter-components input');
-    assert.equal(messageSent.name, 'view:setOptions');
-    assert.deepEqual(messageSent.message.options, { components: true });
-    assert.equal(messageSent.name, 'view:setOptions');
-    assert.deepEqual(messageSent.message.options, { components: true });
-  });
-
   test("Inspecting a model", async function(assert) {
     let messageSent = null;
     port.reopen({

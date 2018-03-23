@@ -86,14 +86,7 @@ export default EmberObject.extend(PortMixin, {
       }
     },
     contextMenu() {
-      console.log('Clicked element in context menu', this.lastClickedElement);
-    },
-    setOptions({ options }) {
-      this.set('options', options);
-      if (this.glimmerTree) {
-        this.glimmerTree.updateOptions(options);
-      }
-      this.sendTree();
+      this.inspectComponentForNode(this.lastClickedElement);
     },
     sendModelToConsole(message) {
       let model;
@@ -156,6 +149,14 @@ export default EmberObject.extend(PortMixin, {
         viewRegistry: this.get('viewRegistry')
       });
     }
+  },
+
+  inspectComponentForNode(domNode) {
+    let viewElem = this.findNearestView(domNode);
+
+    this.sendMessage('inspectComponent', {
+      objectId: viewElem.id
+    });
   },
 
   updateDurations(durations) {
@@ -349,7 +350,7 @@ export default EmberObject.extend(PortMixin, {
 
   shouldShowView(view) {
     if (view instanceof Component) {
-      return this.options.components;
+      return true;
     }
     return (this.hasOwnController(view) || this.hasOwnContext(view)) &&
       (!view.get('isVirtual') || this.hasOwnController(view) || this.hasOwnContext(view));
@@ -663,7 +664,7 @@ export default EmberObject.extend(PortMixin, {
       return false;
     }
     return this._nodeHasOwnController(renderNode, parentNode) &&
-      (this.options.components || !(this._nodeIsEmberComponent(renderNode))) &&
+      (!(this._nodeIsEmberComponent(renderNode))) &&
       (this._nodeHasViewInstance(renderNode) || this._nodeHasOwnController(renderNode, parentNode));
   },
 

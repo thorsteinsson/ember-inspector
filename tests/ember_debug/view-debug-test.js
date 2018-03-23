@@ -135,15 +135,6 @@ module('Ember Debug - View', function(hooks) {
 
     let tree = message.tree;
     let simple = tree.children[0];
-    assert.equal(simple.children.length, 0, 'Components are not listed by default.');
-    run(() => {
-      port.trigger('view:setOptions', { options: { components: true } });
-    });
-
-    await wait();
-
-    tree = message.tree;
-    simple = tree.children[0];
     assert.equal(simple.children.length, 1, 'Components can be configured to show.');
     let component = simple.children[0];
     // Less than 3.1

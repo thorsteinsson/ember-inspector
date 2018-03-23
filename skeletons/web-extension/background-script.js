@@ -101,24 +101,26 @@
     });
   });
 
+  var hasContextMenu = false;
   chrome.tabs.onActivated.addListener(({ tabId }) => {
     activeTabId = tabId;
 
-    if (emberInspectorChromePorts[activeTabId]) {
-      chrome.contextMenus.create({
-        id: 'inspect-ember-component',
-        title: 'Inspect Ember Component',
-        contexts: ['all'],
-        onclick: function() {
-          chrome.tabs.sendMessage(activeTabId, {
-            from: 'devtools',
-            type: 'view:contextMenu'
-          });
-        }
-      });
-    } else {
-      chrome.contextMenus.remove('inspect-ember-component');
+    if (hasContextMenu) {
+      return;
     }
+    hasContextMenu = true;
+    
+    chrome.contextMenus.create({
+      id: 'inspect-ember-component',
+      title: 'Inspect Ember Component',
+      contexts: ['all'],
+      onclick: function() {
+        chrome.tabs.sendMessage(activeTabId, {
+          from: 'devtools',
+          type: 'view:contextMenu'
+        });
+      }
+    });
   });
 
   /**

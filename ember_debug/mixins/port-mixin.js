@@ -16,8 +16,8 @@ export default Mixin.create({
     this.removePortListeners();
   },
 
-  sendMessage(name, message) {
-    this.get('port').send(this.messageName(name), message);
+  sendMessage(name, message, callback) {
+    this.get('port').send(this.messageName(name), message, callback);
   },
 
   setupPortListeners() {

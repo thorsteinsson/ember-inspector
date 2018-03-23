@@ -114,7 +114,7 @@ export default class {
   build() {
     if (this.getRoot()) {
       let outletTree = this.buildOutletTree();
-      let componentTrees = this.options.components ? this.buildComponentTrees(outletTree) : [];
+      let componentTrees = this.buildComponentTrees(outletTree);
       return this.addComponentsToOutlets(outletTree, componentTrees);
     }
   }

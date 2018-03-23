@@ -1,18 +1,12 @@
-import { on } from '@ember/object/evented';
-import { observer, get } from '@ember/object';
+import { get } from '@ember/object';
 import Controller, { inject as controller } from '@ember/controller';
 import searchMatch from 'ember-inspector/utils/search-match';
-import { alias, filter } from '@ember/object/computed';
+import { filter } from '@ember/object/computed';
 
 export default Controller.extend({
   application: controller(),
   pinnedObjectId: null,
   inspectingViews: false,
-  queryParams: ['components'],
-  components: alias('options.components'),
-  options: {
-    components: false
-  },
 
   /**
    * Bound to the search field to filter the component list.
@@ -32,10 +26,6 @@ export default Controller.extend({
   filteredList: filter('model', function(item) {
     return searchMatch(get(item, 'value.name'), this.get('searchText'));
   }).property('model.[]', 'searchText'),
-
-  optionsChanged: on('init', observer('options.components', function() {
-    this.port.send('view:setOptions', { options: this.get('options') });
-  })),
 
   actions: {
     previewLayer({ value: { objectId, elementId, renderNodeId } }) {
